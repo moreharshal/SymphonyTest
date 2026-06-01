@@ -206,7 +206,7 @@
 <body>
     <div class="container">
         <h1>Mathematical Operations Calculator</h1>
-        <p class="subtitle">Jira Story: RAP-837</p>
+        <p class="subtitle">Jira Story: RAP-837 | Keyboard Shortcuts: +, -, *, /, Esc</p>
 
         <div class="input-group">
             <label for="num1">First Number</label>
@@ -308,12 +308,25 @@
                 return;
             }
 
-            historyList.innerHTML = calculationHistory.map(item => `
-                <div class="history-item">
-                    <span>${item.expression}</span>
-                    <span class="history-time">${item.timestamp}</span>
-                </div>
-            `).join('');
+            // Clear existing content
+            historyList.innerHTML = '';
+
+            // Build DOM elements safely to prevent XSS
+            calculationHistory.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+
+                const exprSpan = document.createElement('span');
+                exprSpan.textContent = item.expression;
+
+                const timeSpan = document.createElement('span');
+                timeSpan.className = 'history-time';
+                timeSpan.textContent = item.timestamp;
+
+                div.appendChild(exprSpan);
+                div.appendChild(timeSpan);
+                historyList.appendChild(div);
+            });
         }
 
         function validateInputs(num1, num2) {
@@ -391,6 +404,38 @@
             document.getElementById('error').style.display = 'none';
             document.getElementById('num1').focus();
         }
+
+        // Keyboard shortcuts for operations
+        document.addEventListener('keydown', function(e) {
+            // Only trigger if not typing in input fields or if Ctrl/Cmd key is pressed
+            const isInputFocused = document.activeElement.tagName === 'INPUT';
+
+            // Allow shortcuts with Ctrl/Cmd modifier or when not in input field
+            if (e.ctrlKey || e.metaKey || !isInputFocused) {
+                switch(e.key) {
+                    case '+':
+                        e.preventDefault();
+                        performOperation('add');
+                        break;
+                    case '-':
+                        e.preventDefault();
+                        performOperation('subtract');
+                        break;
+                    case '*':
+                        e.preventDefault();
+                        performOperation('multiply');
+                        break;
+                    case '/':
+                        e.preventDefault();
+                        performOperation('divide');
+                        break;
+                    case 'Escape':
+                        e.preventDefault();
+                        clearAll();
+                        break;
+                }
+            }
+        });
 
         document.getElementById('num1').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
