@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematical Operations Calculator - RAP-837</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .operation-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .btn-subtract {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .btn-multiply {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .btn-divide {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-clear {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            margin-top: 10px;
+        }
+
+        .result-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .result-label {
+            color: white;
+            font-size: 14px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .result-value {
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            word-break: break-all;
+        }
+
+        .error {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+            display: none;
+        }
+
+        .history {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .history-title {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-time {
+            font-size: 11px;
+            color: #999;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .result-value {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mathematical Operations Calculator</h1>
+        <p class="subtitle">Jira Story: RAP-837</p>
+
+        <div class="input-group">
+            <label for="num1">First Number</label>
+            <input type="number" id="num1" placeholder="Enter first number" step="any">
+        </div>
+
+        <div class="input-group">
+            <label for="num2">Second Number</label>
+            <input type="number" id="num2" placeholder="Enter second number" step="any">
+        </div>
+
+        <div class="operation-buttons">
+            <button class="btn-add" onclick="performOperation('add')">Add (+)</button>
+            <button class="btn-subtract" onclick="performOperation('subtract')">Subtract (-)</button>
+            <button class="btn-multiply" onclick="performOperation('multiply')">Multiply (×)</button>
+            <button class="btn-divide" onclick="performOperation('divide')">Divide (÷)</button>
+            <button class="btn-clear" onclick="clearAll()">Clear All</button>
+        </div>
+
+        <div id="error" class="error"></div>
+
+        <div class="result-container" id="resultContainer" style="display: none;">
+            <div class="result-label">Result</div>
+            <div class="result-value" id="result">0</div>
+        </div>
+
+        <div class="history">
+            <div class="history-title">Calculation History</div>
+            <div class="history-list" id="historyList">
+                <p style="text-align: center; color: #999; font-size: 14px;">No calculations yet</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let calculationHistory = [];
+        const MAX_HISTORY = 10;
+
+        function getInputValues() {
+            const num1 = parseFloat(document.getElementById('num1').value);
+            const num2 = parseFloat(document.getElementById('num2').value);
+            return { num1, num2 };
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            document.getElementById('resultContainer').style.display = 'none';
+
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showResult(value) {
+            document.getElementById('error').style.display = 'none';
+            const resultContainer = document.getElementById('resultContainer');
+            const resultDiv = document.getElementById('result');
+            resultContainer.style.display = 'block';
+            resultDiv.textContent = Number.isInteger(value) ? value : value.toFixed(8).replace(/\.?0+$/, '');
+        }
+
+        function addToHistory(operation, num1, num2, result) {
+            const timestamp = new Date().toLocaleTimeString();
+            let expression;
+
+            switch(operation) {
+                case 'add':
+                    expression = `${num1} + ${num2} = ${result}`;
+                    break;
+                case 'subtract':
+                    expression = `${num1} - ${num2} = ${result}`;
+                    break;
+                case 'multiply':
+                    expression = `${num1} × ${num2} = ${result}`;
+                    break;
+                case 'divide':
+                    expression = `${num1} ÷ ${num2} = ${result}`;
+                    break;
+                default:
+                    expression = `${num1} = ${result}`;
+            }
+
+            calculationHistory.unshift({ expression, timestamp });
+
+            if (calculationHistory.length > MAX_HISTORY) {
+                calculationHistory.pop();
+            }
+
+            updateHistoryDisplay();
+        }
+
+        function updateHistoryDisplay() {
+            const historyList = document.getElementById('historyList');
+
+            if (calculationHistory.length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; color: #999; font-size: 14px;">No calculations yet</p>';
+                return;
+            }
+
+            historyList.innerHTML = calculationHistory.map(item => `
+                <div class="history-item">
+                    <span>${item.expression}</span>
+                    <span class="history-time">${item.timestamp}</span>
+                </div>
+            `).join('');
+        }
+
+        function validateInputs(num1, num2) {
+            if (isNaN(num1)) {
+                showError('Please enter a valid first number');
+                return false;
+            }
+
+            if (isNaN(num2)) {
+                showError('Please enter a valid second number');
+                return false;
+            }
+
+            return true;
+        }
+
+        function performOperation(operation) {
+            const { num1, num2 } = getInputValues();
+
+            if (!validateInputs(num1, num2)) {
+                return;
+            }
+
+            let result;
+            try {
+                switch(operation) {
+                    case 'add':
+                        result = add(num1, num2);
+                        break;
+                    case 'subtract':
+                        result = subtract(num1, num2);
+                        break;
+                    case 'multiply':
+                        result = multiply(num1, num2);
+                        break;
+                    case 'divide':
+                        result = divide(num1, num2);
+                        break;
+                    default:
+                        showError('Invalid operation');
+                        return;
+                }
+
+                showResult(result);
+                addToHistory(operation, num1, num2, result);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        function add(a, b) {
+            return a + b;
+        }
+
+        function subtract(a, b) {
+            return a - b;
+        }
+
+        function multiply(a, b) {
+            return a * b;
+        }
+
+        function divide(a, b) {
+            if (b === 0) {
+                throw new Error('Division by zero is not allowed');
+            }
+            return a / b;
+        }
+
+        function clearAll() {
+            document.getElementById('num1').value = '';
+            document.getElementById('num2').value = '';
+            document.getElementById('result').textContent = '0';
+            document.getElementById('resultContainer').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('num1').focus();
+        }
+
+        document.getElementById('num1').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('num2').focus();
+            }
+        });
+
+        document.getElementById('num2').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performOperation('add');
+            }
+        });
+
+        window.addEventListener('load', function() {
+            document.getElementById('num1').focus();
+        });
+    </script>
+</body>
+</html>
