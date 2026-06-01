@@ -165,13 +165,23 @@
         function displayResult(message) {
             const resultDiv = document.getElementById('result');
             resultDiv.className = 'result';
-            resultDiv.innerHTML = `<div class="result-text">${message}</div>`;
+            // Safe from XSS - using textContent instead of innerHTML
+            const textElement = document.createElement('div');
+            textElement.className = 'result-text';
+            textElement.textContent = message;
+            resultDiv.innerHTML = '';
+            resultDiv.appendChild(textElement);
         }
 
         function displayError(message) {
             const resultDiv = document.getElementById('result');
             resultDiv.className = 'result error';
-            resultDiv.innerHTML = `<div class="result-text">${message}</div>`;
+            // Safe from XSS - using textContent instead of innerHTML
+            const textElement = document.createElement('div');
+            textElement.className = 'result-text';
+            textElement.textContent = message;
+            resultDiv.innerHTML = '';
+            resultDiv.appendChild(textElement);
         }
 
         // Allow Enter key to trigger addition
