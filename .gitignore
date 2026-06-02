@@ -21,3 +21,6 @@ buildNumber.properties
 # OS
 .DS_Store
 Thumbs.db
+
+# Testing artifacts
+.push-marker
