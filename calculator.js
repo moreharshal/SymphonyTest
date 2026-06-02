@@ -40,7 +40,6 @@ function initCalculator() {
 
     // Handle form submission
     form.addEventListener('submit', handleCalculation);
-    calculateBtn.addEventListener('click', handleCalculation);
 
     // Handle clear button
     clearBtn.addEventListener('click', clearCalculator);

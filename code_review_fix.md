@@ -251,4 +251,4 @@ Excellent work! This is a model example of a well-implemented feature with compr
 **Branch:** RAP-838-1
 **Repository:** https://github.com/moreharshal/SymphonyTest
 **Commits Reviewed:** 8d1018f, f9377cd
-**Fixes Commit:** [Pending]
+**Fixes Commit:** 0705bfb50014f34415fd70a162e49666bbddf68e

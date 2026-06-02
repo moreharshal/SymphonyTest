@@ -1,6 +1,7 @@
 package com.forcepoint.calculator;
 
 import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -67,9 +68,12 @@ public class CalculatorApp {
                     default:
                         System.out.println("Invalid choice! Please select 1-4.");
                 }
-            } catch (Exception e) {
+            } catch (InputMismatchException e) {
                 System.out.println("Error: Invalid input. Please enter numeric values.");
                 scanner.nextLine(); // Clear the buffer
+            } catch (NoSuchElementException e) {
+                System.out.println("\nInput stream closed. Exiting gracefully.");
+                break;
             }
         }
 
